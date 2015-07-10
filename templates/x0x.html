@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block page_style %}
+  <link rel="stylesheet" href="{% static "css/pages/pages/page_404_error.css" %}">
+{% endblock %}
+
+{% block title %}Erreur {{ number }} !{% endblock %}
+
+{% block contents %}
+  <!--Error Block-->
+  <div class="row">
+    <div class="col-md-8 col-md-offset-2">
+      <div class="error-v1">
+        <span class="error-v1-title">{{ number }}</span>
+        <span>{{ short_description }}</span>
+        <p>{{ full_description }}</p>
+        <a class="btn-u btn-bordered" href="{% url 'home' %}">Retour à la page d'accueil</a>
+      </div>
+    </div>
+  </div>
+  <!--End Error Block-->
+{% endblock %}
