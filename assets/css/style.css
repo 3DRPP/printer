@@ -12,9 +12,6 @@
 @import url(plugins.css);
 @import url(app.css);
 
-/*Import CSS Plugins*/
-@import url(plugins/style-switcher.css);
-
 body { 
    color: #333; 
    font-size: 13px;
