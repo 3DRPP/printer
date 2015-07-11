@@ -109,11 +109,11 @@
         <ul class="nav navbar-nav">
           <li><a href="{% url 'home' %}">Accueil</a></li>
           {% if user.is_authenticated %}
-          <li><a href="#todo">Tâches</a></li>
+          <li><a href="{% url 'tasks' %}">Tâches</a></li>
           {% endif %}
           <li><a href="#todo">Statistiques</a></li>
           {% if user.is_admin %}
-          <li><a href="#todo">Administration</a></li>
+          <li><a href="{% url 'admin' %}">Administration</a></li>
           {% endif %}
           <!-- End Search Block -->
         </ul>
@@ -126,12 +126,6 @@
 
 
   <div class="container content-sm">
-    {% if error %}
-      <div class="alert alert-danger fade in alert-dismissable">
-        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-        {{ error }}
-      </div>
-    {% endif %}
     {% block contents %}{% endblock %}
   </div>
 
@@ -210,6 +204,7 @@
 <script type="text/javascript" src="{% static "js/custom.js" %}"></script>
 <!-- JS Page Level -->
 <script type="text/javascript" src="{% static "js/app.js" %}"></script>
+{% block scripts %}{% endblock %}
 <script type="text/javascript">
   jQuery(document).ready(function () {
     App.init();
@@ -221,6 +216,5 @@
     <script src="{% static "plugins/html5shiv.js" %}"></script>
     <script src="{% static "plugins/placeholder-IE-fixes.js" %}"></script>
 <![endif]-->
-{% block scripts %}{% endblock %}
 </body>
 </html>

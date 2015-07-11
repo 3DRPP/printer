@@ -1,0 +1,139 @@
+{% extends 'base.html' %}{% load staticfiles %}
+
+{% block page_style %}
+  <link rel="stylesheet" href="{% static "plugins/sky-forms-pro/skyforms/css/sky-forms.css" %}">
+  <link rel="stylesheet" href="{% static "plugins/sky-forms-pro/skyforms/custom/custom-sky-forms.css" %}">
+  <!--[if lt IE 9]><link rel="stylesheet" href="{% static "plugins/sky-forms-pro/skyforms/css/sky-forms-ie8.css" %}"><![endif]-->
+  <link rel="stylesheet" href="{% static "plugins/datatables/jquery.dataTables.css" %}">
+{% endblock %}
+
+{% block title %}Tâches{% endblock %}
+
+{% block contents %}
+  <div class="row">
+    <div class="col-md-12">
+      <div class="panel panel-dark-red margin-bottom-40">
+        <div class="panel-heading">
+          <h3 class="panel-title">
+            <i class="fa fa-tasks"></i> Demandes d'impression 3D en attente</h3>
+        </div>
+        <table class="table table-striped">
+          <thead>
+          <tr>
+            <th>Utilisateur</th>
+            <th>Demande</th>
+            <th>Fichier</th>
+            <th>Date d'ajout</th>
+            <th>Commentaire</th>
+            {% if user.is_admin %}
+              <td>Actions</td>
+            {% endif %}
+          </tr>
+          </thead>
+          <tbody>
+          {% for waiting_task in waiting_tasks %}
+            <tr>
+              <td>{{ waiting_task.owner.first_name }} {{ waiting_task.owner.last_name }}</td>
+              <td>{{ waiting_task.name }}</td>
+              <td><a href="{{ waiting_task.file.url }}">{{ waiting_task.filename }}</a></td>
+              <td>{{ waiting_task.date_added|date:"Y/m/d" }}</td>
+              <td>{{ waiting_task.comment }}</td>
+              {% if user.is_admin %}
+                <td><button class="btn-u btn-u-xs btn-u-blue" type="button">Lancer</button><button class="btn-u btn-u-xs btn-u-purple" type="button">Reset</button><button class="btn-u btn-u-xs btn-u-red" type="button">Supprimer</button></td>
+              {% endif %}
+            </tr>
+          {% endfor %}
+          </tbody>
+        </table>
+
+      </div>
+    </div>
+  </div>
+  {% if error %}
+    <div class="alert alert-danger fade in alert-dismissable">
+      <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+      {{ error }}
+    </div>
+  {% endif %}
+  <div class="row">
+    <div class="col-md-8">
+      <form action="{% url 'add_task' %}" method="post" enctype="multipart/form-data" id="sky-form1" class="sky-form" novalidate="novalidate">{% csrf_token %}
+        <header>Formulaire de demande d'impression</header>
+
+        <fieldset>
+          <div class="row">
+            <section class="col col-6">
+              <label class="input">
+                <i class="icon-append fa fa-file"></i>
+                <input type="text" name="name" placeholder="Nom de l'objet">
+              </label>
+            </section>
+
+            <section class="col col-6">
+              <label for="file" class="input input-file">
+                <div class="button">
+                  <input id="gergerg" type="file" name="file" multiple="" onchange="this.parentNode.nextElementSibling.value = this.value.substr(this.value.lastIndexOf('\\') + 1)">Browse
+                </div>
+                <input id="lololoololol" type="text" name="filename" placeholder="Include some file" readonly="">
+              </label>
+            </section>
+          </div>
+
+          <section>
+            <label class="textarea">
+              <i class="icon-append fa fa-comment"></i>
+              <textarea rows="5" name="comment" placeholder="Indiquez ici les informations complémentaires"></textarea>
+            </label>
+          </section>
+        </fieldset>
+        <footer>
+          <button type="submit" class="btn-u">Faire la demande</button>
+          <div class="progress"></div>
+        </footer>
+        <div class="message">
+          <i class="rounded-x fa fa-check"></i>
+
+          <p>Merci pour votre demande !<br>Nous nous occuperons de vous très prochainement.</p>
+        </div>
+      </form>
+    </div>
+    <div class="col-md-4">
+      <div class="tag-box tag-box-v3">
+        <div class="headline"><h2>Informations</h2></div>
+
+        <p>Veuillez indiquer votre préférence sur la matière et couleur pour l'impression.<br><br>Les matières et couleurs disponibles :</p><br>
+        <ul>
+          <li>ABS Blanc</li>
+          <li>PLA Blanc</li>
+        </ul>
+        <br>
+        <p>Les formats 3D acceptés sont :</p><br>
+        <ul>
+          <li>STEP</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+{% block scripts %}
+  <script src="{% static "plugins/sky-forms-pro/skyforms/js/jquery.validate.min.js" %}"></script>
+  <script src="{% static "plugins/sky-forms-pro/skyforms/js/jquery.maskedinput.min.js" %}"></script>
+  <script src="{% static "plugins/sky-forms-pro/skyforms/js/jquery-ui.min.js" %}"></script>
+  <script src="{% static "plugins/sky-forms-pro/skyforms/js/jquery.form.min.js" %}"></script>
+  <script src="{% static "plugins/datatables/jquery.dataTables.min.js" %}"></script>
+  <script type="text/javascript" src="{% static "js/forms/order.js" %}"></script>
+  <script>
+    $(document).ready(function() {
+      $('#example').dataTable( {
+        "bPaginate": true,
+        "bLengthChange": false,
+        "pageLength" : 5
+      } );
+    } );
+  </script>
+{% endblock %}
+
+{% block on_read_js %}
+  OrderForm.initOrderForm();
+{% endblock %}

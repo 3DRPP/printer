@@ -1,13 +1,16 @@
 from django.conf.urls import patterns, include, url
-from django.conf.urls.static import static
-from printer.settings import SITE_URL_PREFIX, SITE_URL, STATIC_URL, STATICFILES_DIRS
-from printer.views import home, my_login, my_400, my_403, my_404, my_500
+from printer.settings import SITE_URL_PREFIX
+from printer.views import home, my_login, admin, gpio_switch, tasks, add_task,\
+    my_400, my_403, my_404, my_500
 from django.contrib.auth.views import logout
-from django.conf.urls import handler400, handler403, handler404, handler500
 
 base_urlpatterns = patterns(
     '',
     url(r'^$', home, name='home'),
+    url(r'^taches/$', tasks, name='tasks'),
+    url(r'^taches/add/$', add_task, name='add_task'),
+    url(r'^admin/switch_gpio/', gpio_switch, name='gpio_switch'),
+    url(r'^admin/', admin, name='admin'),
     url(r'^connexion/$', my_login, name='login'),
     url(r'^deconnexion/$', logout, {'next_page': 'printer.views.home'}, name='logout'),
 )

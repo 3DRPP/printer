@@ -26,6 +26,7 @@ DOMAIN = 'http://localhost/' # Must end with a slash! /!\
 SITE_URL_PREFIX = '' # Empty or your-prefix/ <- Must end with a slash /!\
 SITE_URL = DOMAIN + SITE_URL_PREFIX
 STATIC_URL = '/' + SITE_URL_PREFIX + 'assets/'
+MEDIA_URL = '/' + SITE_URL_PREFIX + 'media/'
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = '5dxu%_2qv*nvhal*oa!b=qr-x94^26ax2y@t$aukemdkve^)4r'

@@ -1,0 +1,57 @@
+{% extends 'base.html' %}{% load staticfiles %}
+
+{% block page_style %}{% endblock %}
+
+{% block title %}Administration{% endblock %}
+
+{% block contents %}
+  {% if error %}
+    <div class="alert alert-danger fade in alert-dismissable">
+      <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+      {{ error }}
+    </div>
+  {% endif %}
+  <div class="row">
+    <div class="col-md-12">
+      <div class="row margin-bottom-10">
+        <div class="col-sm-1 col-xs-6">
+          {% for gpio in gpio_header.left_pins %}
+              <button value="{% url 'gpio_switch' %}?gpio_id={{ gpio.number }}"
+                      onclick="
+                      if (this.className == 'btn btn-danger')
+                        {this.className = 'btn btn-success'}
+                      else
+                        {this.className = 'btn btn-danger'}
+                      var xmlHttp = new XMLHttpRequest();
+                      xmlHttp.open('GET', this.value, false);
+                      xmlHttp.send(null);
+                      return xmlHttp.responseText;" class="btn {% if gpio.value %}btn-success{% else %}btn-danger{% endif %}" type="button"><i class="fa fa-power-off"></i> {{ gpio.number }}</button><br>
+          {% endfor %}
+        </div>
+        <div class="col-sm-5 col-xs-6 md-margin-bottom-20">
+          <img class="img-responsive" src="{% static 'img/GPIO.png' %}" alt="">
+        </div>
+        <div class="col-sm-1 col-xs-6">
+          {% for gpio in gpio_header.right_pins %}
+            <button value="{% url 'gpio_switch' %}?gpio_id={{ gpio.number }}"
+                    onclick="
+                      if (this.className == 'btn btn-danger')
+                        {this.className = 'btn btn-success'}
+                      else
+                        {this.className = 'btn btn-danger'}
+                      var xmlHttp = new XMLHttpRequest();
+                      xmlHttp.open('GET', this.value, false);
+                      xmlHttp.send(null);
+                      return xmlHttp.responseText;" class="btn {% if gpio.value %}btn-success{% else %}btn-danger{% endif %}" type="button"><i class="fa fa-power-off"></i> {{ gpio.number }}</button><br>
+          {% endfor %}
+        </div>
+        <div class="col-sm-5 col-xs-6">
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+{% block scripts %}{% endblock %}
+
+{% block on_read_js %}{% endblock %}

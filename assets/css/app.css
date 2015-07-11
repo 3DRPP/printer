@@ -3172,6 +3172,15 @@ blockquote.hero.hero-default small {
    background: #9c8061;
 }
 
+/*Panel Dark Red*/
+.panel-dark-red {
+  border-color: #b61332;
+}
+
+.panel-dark-red > .panel-heading {
+  background: #b61332;
+}
+
 /*Panel Dark Blue*/
 .panel-dark-blue {
    border-color: #4765a0;
