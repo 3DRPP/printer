@@ -31,33 +31,12 @@ class Pin:
 class Header:
     def __init__(self):
         self.left_pins = []
-        self.left_pins.append(Pin(3, False))
-        self.left_pins.append(Pin(5, False))
-        self.left_pins.append(Pin(7, False))
-        self.left_pins.append(Pin(11, False))
-        self.left_pins.append(Pin(13, False))
-        self.left_pins.append(Pin(15, False))
-        self.left_pins.append(Pin(19, False))
-        self.left_pins.append(Pin(21, False))
-        self.left_pins.append(Pin(23, False))
-        self.left_pins.append(Pin(29, False))
-        self.left_pins.append(Pin(31, False))
-        self.left_pins.append(Pin(33, False))
-        self.left_pins.append(Pin(35, False))
-        self.left_pins.append(Pin(37, False))
         self.right_pins = []
-        self.right_pins.append(Pin(8, False))
-        self.right_pins.append(Pin(10, False))
-        self.right_pins.append(Pin(12, False))
-        self.right_pins.append(Pin(16, False))
-        self.right_pins.append(Pin(18, False))
-        self.right_pins.append(Pin(22, False))
-        self.right_pins.append(Pin(24, False))
-        self.right_pins.append(Pin(26, False))
-        self.right_pins.append(Pin(32, False))
-        self.right_pins.append(Pin(36, False))
-        self.right_pins.append(Pin(38, False))
-        self.right_pins.append(Pin(40, False))
+        for x in gpios:
+            if x % 2 == 1:
+                self.left_pins.append(Pin(x, False))
+            else:
+                self.right_pins.append(Pin(x, False))
 
     def get_value(self, number):
         for pin in self.left_pins + self.right_pins:
@@ -70,11 +49,8 @@ class Header:
                 pin.set_value(value)
 
     def switch_value(self, number):
-        print('here')
         for pin in self.left_pins + self.right_pins:
-            print(pin.number)
             if pin.number == number:
-                print('ok')
                 pin.switch_value()
 
 
