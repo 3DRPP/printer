@@ -59,7 +59,9 @@ header = Header()
 
 try:
     GPIO.setmode(GPIO.BOARD)
-    GPIO.setup(gpios, GPIO.OUT, initial=GPIO.LOW)
+    for id in gpios:
+      print('Initializing gpio ' + str(id))
+      GPIO.setup(id, GPIO.OUT, initial=GPIO.LOW)
     print('Initialized GPIOs')
 except:
     print('Could not set GPIO mode to BOARD.')
