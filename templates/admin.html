@@ -1,6 +1,11 @@
 {% extends 'base.html' %}{% load staticfiles %}
 
-{% block page_style %}{% endblock %}
+{% block page_style %}
+  <link rel="stylesheet" href="{% static "plugins/sky-forms-pro/skyforms/css/sky-forms.css" %}">
+  <link rel="stylesheet" href="{% static "plugins/sky-forms-pro/skyforms/custom/custom-sky-forms.css" %}">
+  <!--[if lt IE 9]><link rel="stylesheet" href="{% static "plugins/sky-forms-pro/skyforms/css/sky-forms-ie8.css" %}"><![endif]-->
+  <link rel="stylesheet" href="{% static "plugins/datatables/jquery.dataTables.css" %}">
+{% endblock %}
 
 {% block title %}Administration{% endblock %}
 
@@ -13,45 +18,181 @@
   {% endif %}
   <div class="row">
     <div class="col-md-12">
-      <div class="row margin-bottom-10">
-        <div class="col-sm-1 col-xs-6">
-          {% for gpio in gpio_header.left_pins %}
-              <button value="{% url 'gpio_switch' %}?gpio_id={{ gpio.number }}"
-                      onclick="
-                      if (this.className == 'btn btn-danger')
-                        {this.className = 'btn btn-success'}
-                      else
-                        {this.className = 'btn btn-danger'}
-                      var xmlHttp = new XMLHttpRequest();
-                      xmlHttp.open('GET', this.value, false);
-                      xmlHttp.send(null);
-                      return xmlHttp.responseText;" class="btn {% if gpio.value %}btn-success{% else %}btn-danger{% endif %}" type="button"><i class="fa fa-power-off"></i> {{ gpio.number }}</button><br>
-          {% endfor %}
+      {% if error %}
+        <div class="alert alert-danger fade in alert-dismissable">
+          <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+          {{ error }}
         </div>
-        <div class="col-sm-5 col-xs-6 md-margin-bottom-20">
-          <img class="img-responsive" src="{% static 'img/GPIO.png' %}" alt="">
-        </div>
-        <div class="col-sm-1 col-xs-6">
-          {% for gpio in gpio_header.right_pins %}
-            <button value="{% url 'gpio_switch' %}?gpio_id={{ gpio.number }}"
-                    onclick="
-                      if (this.className == 'btn btn-danger')
-                        {this.className = 'btn btn-success'}
-                      else
-                        {this.className = 'btn btn-danger'}
-                      var xmlHttp = new XMLHttpRequest();
-                      xmlHttp.open('GET', this.value, false);
-                      xmlHttp.send(null);
-                      return xmlHttp.responseText;" class="btn {% if gpio.value %}btn-success{% else %}btn-danger{% endif %}" type="button"><i class="fa fa-power-off"></i> {{ gpio.number }}</button><br>
-          {% endfor %}
-        </div>
-        <div class="col-sm-5 col-xs-6">
+      {% endif %}
+      <!-- Contextual Backgrounds -->
+      <div class="tab-v2">
+        <ul class="nav nav-tabs">
+          <li class="active"><a href="#contextual-bg-1" data-toggle="tab">Controlleur GPIO</a></li>
+          <li><a href="#contextual-bg-2" data-toggle="tab">Ajout d'utilisateurs</a></li>
+          <li><a href="#contextual-bg-3" data-toggle="tab">Liste des utilisateurs</a></li>
+        </ul>
+        <div class="tab-content">
+          <div class="tab-pane fade in active" id="contextual-bg-1">
+            <h3 class="heading-sm margin-bottom-20">Controlleur GPIO</h3>
+            <div class="contex-bg">
+              <div class="row margin-bottom-10">
+                <div class="col-sm-1 col-xs-6">
+                  {% for gpio in gpio_header.left_pins %}
+                    <button value="{% url 'gpio_switch' %}?gpio_id={{ gpio.number }}"
+                            onclick="
+                        if (this.className == 'btn btn-danger')
+                          {this.className = 'btn btn-success'}
+                        else
+                          {this.className = 'btn btn-danger'}
+                        var xmlHttp = new XMLHttpRequest();
+                        xmlHttp.open('GET', this.value, false);
+                        xmlHttp.send(null);
+                        return xmlHttp.responseText;" class="btn {% if gpio.value %}btn-success{% else %}btn-danger{% endif %}" type="button"><i class="fa fa-power-off"></i> {% if gpio.number < 10 %}0{% endif %}{{ gpio.number }}</button><br>
+                  {% endfor %}
+                </div>
+                <div class="col-sm-5 col-xs-6 md-margin-bottom-20">
+                  <img class="img-responsive" src="{% static 'img/GPIO.png' %}" alt="">
+                </div>
+                <div class="col-sm-1 col-xs-6">
+                  <br><br>
+                  {% for gpio in gpio_header.right_pins %}
+                    <button value="{% url 'gpio_switch' %}?gpio_id={{ gpio.number }}"
+                            onclick="
+                        if (this.className == 'btn btn-danger')
+                          {this.className = 'btn btn-success'}
+                        else
+                          {this.className = 'btn btn-danger'}
+                        var xmlHttp = new XMLHttpRequest();
+                        xmlHttp.open('GET', this.value, false);
+                        xmlHttp.send(null);
+                        return xmlHttp.responseText;" class="btn {% if gpio.value %}btn-success{% else %}btn-danger{% endif %}" type="button"><i class="fa fa-power-off"></i> {% if gpio.number < 10 %}0{% endif %}{{ gpio.number }}</button><br>
+                  {% endfor %}
+                </div>
+                <div class="col-sm-5 col-xs-6">
+                  <div class="tag-box tag-box-v3">
+                    <div class="headline"><h2>Informations</h2></div>
+
+                    <p>Ce controlleur est à utiliser avec précaution. Ne l'utilisez pas sans savoir ce que vous faites.</p><br>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="tab-pane fade" id="contextual-bg-2">
+            <h3 class="heading-sm margin-bottom-20">Ajout d'utilisateurs</h3>
+            <form action="{% url 'add_user' %}" method="post" id="sky-form1" class="sky-form" novalidate="novalidate">{% csrf_token %}
+              <header>Formulaire d'inscription</header>
+
+              <fieldset>
+                <div class="row">
+                  <section class="col col-6">
+                    <label class="label">Nom d'utilisateur</label>
+                    <label class="input">
+                      <i class="icon-append fa fa-user"></i>
+                      <input type="text" name="name">
+                    </label>
+                  </section>
+                  <section class="col col-6">
+                    <label class="label">Email</label>
+                    <label class="input">
+                      <i class="icon-append fa fa-envelope"></i>
+                      <input type="email" name="email">
+                    </label>
+                  </section>
+                </div>
+
+                <div class="row">
+                  <section class="col col-3">
+                    <label class="label">Prénom</label>
+                    <label class="input">
+                      <i class="icon-append fa fa-user"></i>
+                      <input type="text" name="first_name">
+                    </label>
+                  </section>
+                  <section class="col col-3">
+                    <label class="label">Nom</label>
+                    <label class="input">
+                      <i class="icon-append fa fa-user"></i>
+                      <input type="text" name="last_name">
+                    </label>
+                  </section>
+                  <section class="col col-3">
+                    <label class="label">Mot de passe</label>
+                    <label class="input">
+                      <i class="icon-append fa fa-lock"></i>
+                      <input type="password" name="pass">
+                    </label>
+                  </section>
+                  <section class="col col-3">
+                    <label class="label">Select</label>
+                    <label class="select">
+                      <select name="type">
+                        <option value="0">Client</option>
+                        <option value="1">Administrateur</option>
+                      </select>
+                      <i></i>
+                    </label>
+                  </section>
+                </div>
+              </fieldset>
+
+              <footer>
+                <button type="submit" class="btn-u btn-u-default">Submit</button>
+                <button type="button" class="btn-u" onclick="window.history.back();">Back</button>
+              </footer>
+            </form>
+          </div>
+
+          <div class="tab-pane fade" id="contextual-bg-3">
+            <h3 class="heading-sm margin-bottom-20">Utilisateurs inscrits</h3>
+            <div class="panel panel-dark-red margin-bottom-40">
+              <div class="panel-heading">
+                <h3 class="panel-title">
+                  <i class="fa fa-tasks"></i> Utilisateurs inscrits</h3>
+              </div>
+              <table class="table table-striped">
+                <thead>
+                <tr>
+                  <th>Utilisateur</th>
+                  <th>Prénom</th>
+                  <th>Nom</th>
+                  <th>Email</th>
+                  <th>Type</th>
+                  <td>Date d'inscription</td>
+                  <td>Actions</td>
+                </tr>
+                </thead>
+                <tbody>
+                {% for u in users %}
+                <tr>
+                  <td>{{ u.name }}</td>
+                  <td>{{ u.first_name }}</td>
+                  <td>{{ u.last_name }}</td>
+                  <td>{{ u.email }}</td>
+                  <td>{% if u.is_admin %}Administrateur{% else %}Client{% endif %}</td>
+                  <td>{{ u.date_joined|date:"Y/m/d" }}</td>
+                  <td>{% if not u == user %}<a href="{% url 'del_user' %}?user_id={{ u.id }}" ><button class="btn-u btn-u-xs btn-u-red" type="button">Supprimer</button></a>{% endif %}</td>
+                </tr>
+                {% endfor %}
+                </tbody>
+              </table>
+
+            </div>
+          </div>
         </div>
       </div>
+      <!-- End Contextual Backgrounds -->
     </div>
   </div>
 {% endblock %}
 
-{% block scripts %}{% endblock %}
+{% block scripts %}
+  <script src="{% static "plugins/sky-forms-pro/skyforms/js/jquery.validate.min.js" %}"></script>
+  <script src="{% static "plugins/sky-forms-pro/skyforms/js/jquery.maskedinput.min.js" %}"></script>
+  <script src="{% static "plugins/sky-forms-pro/skyforms/js/jquery-ui.min.js" %}"></script>
+  <script src="{% static "plugins/sky-forms-pro/skyforms/js/jquery.form.min.js" %}"></script>
+  <script type="text/javascript" src="{% static "js/forms/order.js" %}"></script>
+{% endblock %}
+
 
 {% block on_read_js %}{% endblock %}

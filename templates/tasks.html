@@ -15,12 +15,14 @@
       <div class="panel panel-dark-red margin-bottom-40">
         <div class="panel-heading">
           <h3 class="panel-title">
-            <i class="fa fa-tasks"></i> Demandes d'impression 3D en attente</h3>
+            <i class="fa fa-tasks"></i> {% if user.is_admin %}D{% else %}Vos d{% endif %}emandes d'impression 3D en attente</h3>
         </div>
         <table class="table table-striped">
           <thead>
           <tr>
+            {% if user.is_admin %}
             <th>Utilisateur</th>
+            {% endif %}
             <th>Demande</th>
             <th>Fichier</th>
             <th>Date d'ajout</th>
@@ -33,7 +35,9 @@
           <tbody>
           {% for waiting_task in waiting_tasks %}
             <tr>
+              {% if user.is_admin %}
               <td>{{ waiting_task.owner.first_name }} {{ waiting_task.owner.last_name }}</td>
+              {% endif %}
               <td>{{ waiting_task.name }}</td>
               <td><a href="{{ waiting_task.file.url }}">{{ waiting_task.filename }}</a></td>
               <td>{{ waiting_task.date_added|date:"Y/m/d" }}</td>
@@ -121,17 +125,7 @@
   <script src="{% static "plugins/sky-forms-pro/skyforms/js/jquery.maskedinput.min.js" %}"></script>
   <script src="{% static "plugins/sky-forms-pro/skyforms/js/jquery-ui.min.js" %}"></script>
   <script src="{% static "plugins/sky-forms-pro/skyforms/js/jquery.form.min.js" %}"></script>
-  <script src="{% static "plugins/datatables/jquery.dataTables.min.js" %}"></script>
   <script type="text/javascript" src="{% static "js/forms/order.js" %}"></script>
-  <script>
-    $(document).ready(function() {
-      $('#example').dataTable( {
-        "bPaginate": true,
-        "bLengthChange": false,
-        "pageLength" : 5
-      } );
-    } );
-  </script>
 {% endblock %}
 
 {% block on_read_js %}
