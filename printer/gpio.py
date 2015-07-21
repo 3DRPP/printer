@@ -12,6 +12,7 @@ class Pin:
     def __init__(self, number, value):
         self.number = number
         self.value = value
+        self.mode = 'out'
 
     def set_value(self, value):
         try:
@@ -20,12 +21,35 @@ class Pin:
             pass
         self.value = value
 
+    def set_mode(self, mode):
+        if mode == 'in' or mode == 'out':
+            self.mode = mode
+            try:
+                if mode == 'in':
+                    GPIO.setup(self.number, GPIO.IN)
+                    self.value = GPIO.input(self.number)
+                    return self.value
+                else:
+                    GPIO.setup(self.number, GPIO.OUT)
+                    GPIO.output(self.number, GPIO.LOW)
+                    self.value = False
+            except:
+                if mode == 'in':
+                    return False
+
     def switch_value(self):
         try:
             GPIO.output(self.number, GPIO.LOW if self.value else GPIO.HIGH)
         except:
             pass
         self.value = not self.value
+
+    def switch_mode(self):
+        if self.mode == 'out':
+            return 'in', self.set_mode('in')
+        else:
+            self.set_mode('out')
+            return 'out', False
 
 
 class Header:
@@ -47,11 +71,18 @@ class Header:
         for pin in self.left_pins + self.right_pins:
             if pin.number == number:
                 pin.set_value(value)
+                break
 
     def switch_value(self, number):
         for pin in self.left_pins + self.right_pins:
             if pin.number == number:
                 pin.switch_value()
+                break
+
+    def switch_mode(self, number):
+        for pin in self.left_pins + self.right_pins:
+            if pin.number == number:
+                return pin.switch_mode()
 
 
 

@@ -180,7 +180,26 @@ def gpio_switch(request):
             raise Http404()
         gpio.header.switch_value(gpio_id)
         return HttpResponse()
-    return Http404()
+    raise Http404()
+
+
+@login_required
+def gpio_switch_mode(request):
+    if not request.user.is_admin:
+        raise Http404()
+
+    if request.GET:
+        gpio_id = int(request.GET.get('gpio_id'))
+        if not gpio_id in gpio.gpios:
+            raise Http404()
+        mode, value = gpio.header.switch_mode(gpio_id)
+        if mode == 'in':
+            return HttpResponse(value)
+        else:
+            return HttpResponse()
+    raise Http404()
+
+
 
 
 def my_400(request):

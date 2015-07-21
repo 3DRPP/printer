@@ -1,7 +1,7 @@
 from django.conf.urls import patterns, include, url
 from printer.settings import SITE_URL_PREFIX
-from printer.views import home, my_login, admin, gpio_switch, tasks, add_task,\
-    my_400, my_403, my_404, my_500, add_user, del_user
+from printer.views import home, my_login, admin, gpio_switch, gpio_switch_mode,\
+    tasks, add_task, my_400, my_403, my_404, my_500, add_user, del_user
 from django.contrib.auth.views import logout
 
 base_urlpatterns = patterns(
@@ -10,6 +10,7 @@ base_urlpatterns = patterns(
     url(r'^taches/$', tasks, name='tasks'),
     url(r'^taches/add/$', add_task, name='add_task'),
     url(r'^admin/switch_gpio/', gpio_switch, name='gpio_switch'),
+    url(r'^admin/gpio_switch_mode/', gpio_switch_mode, name='gpio_switch_mode'),
     url(r'^admin/add_user/', add_user, name='add_user'),
     url(r'^admin/del_user/', del_user, name='del_user'),
     url(r'^admin/', admin, name='admin'),

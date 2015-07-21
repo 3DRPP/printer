@@ -36,39 +36,25 @@
             <h3 class="heading-sm margin-bottom-20">Controlleur GPIO</h3>
             <div class="contex-bg">
               <div class="row margin-bottom-10">
-                <div class="col-sm-1 col-xs-6">
+                <div class="col-sm-2 col-xs-6">
                   {% for gpio in gpio_header.left_pins %}
-                    <button value="{% url 'gpio_switch' %}?gpio_id={{ gpio.number }}"
-                            onclick="
-                        if (this.className == 'btn btn-danger')
-                          {this.className = 'btn btn-success'}
-                        else
-                          {this.className = 'btn btn-danger'}
-                        var xmlHttp = new XMLHttpRequest();
-                        xmlHttp.open('GET', this.value, false);
-                        xmlHttp.send(null);
-                        return xmlHttp.responseText;" class="btn {% if gpio.value %}btn-success{% else %}btn-danger{% endif %}" type="button"><i class="fa fa-power-off"></i> {% if gpio.number < 10 %}0{% endif %}{{ gpio.number }}</button><br>
+                    <button id="button-{{ gpio.number }}" value="{% url 'gpio_switch' %}?gpio_id={{ gpio.number }}"
+                            class="button-gpio-switch btn {% if gpio.value %}btn-success{% else %}btn-danger{% endif %}" type="button" {% if gpio.mode == 'in' %}disabled{% endif %}><i class="fa fa-power-off"></i> {% if gpio.number < 10 %}0{% endif %}{{ gpio.number }}</button>
+                    <button class="button-gpio-switch-mode" data-myid="{{ gpio.number }}" value="{% url 'gpio_switch_mode' %}?gpio_id={{ gpio.number }}">{% if gpio.mode == 'out' %}OUT{% else %}IN{% endif %}</button><br>
                   {% endfor %}
                 </div>
                 <div class="col-sm-5 col-xs-6 md-margin-bottom-20">
                   <img class="img-responsive" src="{% static 'img/GPIO.png' %}" alt="">
                 </div>
-                <div class="col-sm-1 col-xs-6">
+                <div class="col-sm-2 col-xs-6">
                   <br><br>
                   {% for gpio in gpio_header.right_pins %}
-                    <button value="{% url 'gpio_switch' %}?gpio_id={{ gpio.number }}"
-                            onclick="
-                        if (this.className == 'btn btn-danger')
-                          {this.className = 'btn btn-success'}
-                        else
-                          {this.className = 'btn btn-danger'}
-                        var xmlHttp = new XMLHttpRequest();
-                        xmlHttp.open('GET', this.value, false);
-                        xmlHttp.send(null);
-                        return xmlHttp.responseText;" class="btn {% if gpio.value %}btn-success{% else %}btn-danger{% endif %}" type="button"><i class="fa fa-power-off"></i> {% if gpio.number < 10 %}0{% endif %}{{ gpio.number }}</button><br>
+                    <button id="button-{{ gpio.number }}" value="{% url 'gpio_switch' %}?gpio_id={{ gpio.number }}"
+                            class="button-gpio-switch btn {% if gpio.value %}btn-success{% else %}btn-danger{% endif %}" type="button" {% if gpio.mode == 'in' %}disabled{% endif %}><i class="fa fa-power-off"></i> {% if gpio.number < 10 %}0{% endif %}{{ gpio.number }}</button>
+                    <button class="button-gpio-switch-mode" data-myid="{{ gpio.number }}" value="{% url 'gpio_switch_mode' %}?gpio_id={{ gpio.number }}" onclick="">{% if gpio.mode == 'out' %}OUT{% else %}IN{% endif %}</button><br>
                   {% endfor %}
                 </div>
-                <div class="col-sm-5 col-xs-6">
+                <div class="col-sm-3 col-xs-6">
                   <div class="tag-box tag-box-v3">
                     <div class="headline"><h2>Informations</h2></div>
 
@@ -171,7 +157,7 @@
                   <td>{{ u.email }}</td>
                   <td>{% if u.is_admin %}Administrateur{% else %}Client{% endif %}</td>
                   <td>{{ u.date_joined|date:"Y/m/d" }}</td>
-                  <td>{% if not u == user %}<a href="{% url 'del_user' %}?user_id={{ u.id }}" ><button class="btn-u btn-u-xs btn-u-red" type="button">Supprimer</button></a>{% endif %}</td>
+                   <td>{% if not u == user %}<a href="{% url 'del_user' %}?user_id={{ u.id }}" ><button class="btn-u btn-u-xs btn-u-red" type="button">Supprimer</button></a>{% endif %}</td>
                 </tr>
                 {% endfor %}
                 </tbody>
@@ -192,6 +178,50 @@
   <script src="{% static "plugins/sky-forms-pro/skyforms/js/jquery-ui.min.js" %}"></script>
   <script src="{% static "plugins/sky-forms-pro/skyforms/js/jquery.form.min.js" %}"></script>
   <script type="text/javascript" src="{% static "js/forms/order.js" %}"></script>
+  <script type="text/javascript">
+    $(document).ready(function() {
+      $('.button-gpio-switch').click(function() {
+        if ($(this).hasClass('btn-danger'))
+        {
+          $(this).attr("class","button-gpio-switch btn btn-success");
+        }
+        else
+        {
+          $(this).attr("class","button-gpio-switch btn btn-danger");
+        }
+        var xmlHttp = new XMLHttpRequest();
+        xmlHttp.open('GET', $(this).val(), false);
+        xmlHttp.send(null);
+        return xmlHttp.responseText;
+      });
+      $('.button-gpio-switch-mode').click(function() {
+        var xmlHttp = new XMLHttpRequest();
+        xmlHttp.open('GET', $(this).val(), false);
+        xmlHttp.send(null);
+        var txt = $(this).contents().first().text();
+        var b_id = '#button-' + $(this).attr('data-myid');
+        if (txt == 'OUT')
+        {
+          $(this).text('IN');
+          if (xmlHttp.responseText == 'False')
+          {
+            $(b_id).attr("class","button-gpio-switch btn btn-danger");
+          }
+          else
+          {
+            $(b_id).attr("class","button-gpio-switch btn btn-success");
+          }
+          $(b_id).attr("disabled", true);
+        }
+        else
+        {
+          $(this).text('OUT');
+          $(b_id).attr("class","button-gpio-switch btn btn-danger");
+          $(b_id).attr("disabled", false);
+        }
+      });
+    });
+  </script>
 {% endblock %}
 
 
