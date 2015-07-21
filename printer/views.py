@@ -193,10 +193,7 @@ def gpio_switch_mode(request):
         if not gpio_id in gpio.gpios:
             raise Http404()
         mode, value = gpio.header.switch_mode(gpio_id)
-        if mode == 'in':
-            return HttpResponse(value)
-        else:
-            return HttpResponse()
+        return HttpResponse(value)
     raise Http404()
 
 
