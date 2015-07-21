@@ -31,11 +31,10 @@ class Pin:
                     return self.value
                 else:
                     GPIO.setup(self.number, GPIO.OUT)
-                    GPIO.output(self.number, GPIO.LOW)
-                    self.value = False
+                    self.value = GPIO.input(self.number)
+                    return self.value
             except:
-                if mode == 'in':
-                    return False
+                return self.value
 
     def switch_value(self):
         try:
@@ -48,8 +47,7 @@ class Pin:
         if self.mode == 'out':
             return 'in', self.set_mode('in')
         else:
-            self.set_mode('out')
-            return 'out', False
+            return 'out', self.set_mode('out')
 
 
 class Header:
