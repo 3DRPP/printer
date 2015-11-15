@@ -27,11 +27,13 @@ class Pin:
             try:
                 if mode == 'in':
                     GPIO.setup(self.number, GPIO.IN)
-                    self.value = GPIO.input(self.number)
+                    self.value = bool(GPIO.input(self.number))
+                    print("set mode to in (value=" + str(self.value) + ")")
                     return self.value
                 else:
                     GPIO.setup(self.number, GPIO.OUT)
-                    self.value = GPIO.input(self.number)
+                    self.value = bool(GPIO.input(self.number))
+                    print("set mode to out (value=" + str(self.value) + ")")
                     return self.value
             except:
                 return self.value
