@@ -89,3 +89,140 @@ LANGUAGES = (
 USE_I18N = False
 USE_L10N = True
 USE_TZ = False
+
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [
+            'templates'
+        ],
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': [
+                'django.contrib.auth.context_processors.auth',
+                'django.template.context_processors.debug',
+                'django.template.context_processors.i18n',
+                'django.template.context_processors.media',
+                'django.template.context_processors.static',
+                'django.template.context_processors.tz',
+                'django.contrib.messages.context_processors.messages',
+                'printer.context_processors.site_infos'
+            ],
+        },
+    },
+]
+
+GPIO_pins = {
+    7: None,
+    8: None,
+    10: None,
+    11: None,
+    12: None,
+    13: None,
+    15: None,
+    16: None,
+    18: None,
+    19: None,
+    21: None,
+    22: None,
+    23: None,
+    24: None,
+    26: None,
+    29: None,
+    31: {
+        'target': 'X-axis-sensor',
+        'mode': 'in',
+        'default': False,
+        'events': None
+    },
+    32: {
+        'target': 'Y-axis-sensor',
+        'mode': 'in',
+        'default': False,
+        'events': None
+    },
+    33: {
+        'target': 'Z-axis-sensor',
+        'mode': 'in',
+        'default': False,
+        'events': None
+    },
+    35: {
+        'target': 'ventilation',
+        'mode': 'out',
+        'default': False
+    },
+    36: {
+        'target': 'beeper',
+        'mode': 'out',
+        'default': False
+    },
+    37: {
+        'target': 'nozzle-heating',
+        'mode': 'out',
+        'default': False
+    },
+    38: {
+        'target': 'heating-bed',
+        'mode': 'out',
+        'default': False
+    },
+    40: {
+        'target': 'alimentation',
+        'mode': 'out',
+        'default': False
+    }
+}
+
+live_stream = {
+    'activated': True,
+    'url': 'http://192.168.1.22:8080/stream/video.mjpeg'
+}
+
+printer = {
+    'dimensions': {
+        'X-axis': 300.00, #mm
+        'Y-axis': 300.00, #mm
+        'Z-axis': 300.00  #mm
+    },
+    'nozzle': {
+        'temperature-sensor': {
+            '/dev': 'TODO'
+        }
+    },
+    'heating-bed': {
+        'temperature-sensor': {
+            '/dev': 'TODO'
+        }
+    },
+    'motor-hats': {
+        'below': {
+            'addr': 0x60,
+            'freq': 1600,
+            'm1-m2': {
+                'name': 'X-axis',
+                'step': 1.80, #degrees
+                'speed': 30 #rpm
+            },
+            'm3-m4': {
+                'name': 'Y-axis',
+                'step': 1.80, #degrees
+                'speed': 30 #rpm
+            }
+        },
+        'above': {
+            'addr': 0x61,
+            'freq': 1600,
+            'm1-m2': {
+                'name': 'Z-axis',
+                'step': 1.80, #degrees
+                'speed': 30 #rpm
+            },
+            'm3-m4': {
+                'name': 'nozzle',
+                'step': 1.80, #degrees
+                'speed': 30 #rpm
+            }
+        }
+    }
+}

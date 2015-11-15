@@ -110,6 +110,9 @@
           <li><a href="{% url 'home' %}">Accueil</a></li>
           {% if user.is_authenticated %}
           <li><a href="{% url 'tasks' %}">Tâches</a></li>
+          {% if livestream_activated %}
+          <li><a href="{% url 'live_stream' %}">Live</a></li>
+          {% endif %}
           {% endif %}
           <li><a href="#todo">Statistiques</a></li>
           {% if user.is_admin %}

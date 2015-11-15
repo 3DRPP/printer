@@ -8,6 +8,7 @@ from django.template import RequestContext
 from django.utils.translation import ugettext_lazy as _
 from printer.models import Printable, User
 from printer import gpio
+from printer import settings
 
 def home(request):
     return render(
@@ -252,4 +253,16 @@ def my_500(request):
         request,
         'x0x.html',
         context
+    )
+
+def live_stream(request):
+    if not settings.live_stream['activated']:
+        return
+    context = {
+        'livestream_url': settings.live_stream['url']
+    }
+    return render_to_response(
+        'live.html',
+        context,
+        context_instance=RequestContext(request)
     )
